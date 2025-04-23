@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz Direito Processual Penal</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 20px;
+    }
+    .quiz-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 30px;
+    }
+    .question {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 12px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .options button:hover {
+      background-color: #eef;
+    }
+    .correct {
+      background-color: #c8f7c5;
+    }
+    .incorrect {
+      background-color: #f7c5c5;
+    }
+    .next-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .feedback {
+      margin-top: 10px;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <div class="question" id="question"></div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback"></div>
+    <button class="next-btn" id="nextBtn" style="display:none">Próxima</button>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        q: "O que caracteriza o sistema inquisitorial?",
+        options: ["Separação entre acusação e julgamento", "Paridade entre defesa e acusação", "Centralização das funções em uma só figura (o juiz)", "Publicidade dos atos"],
+        answer: 2,
+        feedback: "\"No sistema inquisitorial (...) as funções de acusar, defender e julgar estão reunidas nas mãos do juiz inquisidor.\" — PDF, p. 9"
+      },
+      {
+        q: "O que significa o princípio nemo tenetur se detegere?",
+        options: ["Ninguém será obrigado a depor contra si mesmo", "Todos devem depor", "Réu deve falar sempre a verdade", "Juiz pode exigir confissão"],
+        answer: 0,
+        feedback: "\"Ninguém é obrigado a produzir prova contra si mesmo (...) art. 5º, LXIII da CF/88\" — PDF, p. 15"
+      },
+      {
+        q: "O que caracteriza o contraditório diferido?",
+        options: ["É o contraditório feito antes da ação", "O réu contradiz o juiz", "Contraditório exercido após medida urgente", "É o contraditório realizado em audiência pública"],
+        answer: 2,
+        feedback: "\"É permitido o contraditório diferido: quando há perigo de perecimento do objeto (...). EXEMPLO: busca e apreensão\" — PDF, p. 10"
+      },
+      {
+        q: "Quais são os efeitos da ausência de defesa técnica no processo penal?",
+        options: ["Nulidade relativa", "Inexistência de prejuízo", "Nulidade absoluta", "Arquivamento automático do processo"],
+        answer: 2,
+        feedback: "\"Súmula 523, STF – No processo penal, a falta da defesa TÉCNICA constitui nulidade absoluta...\" — PDF, p. 10"
+      },
+      {
+        q: "Qual é o princípio que impede o uso de provas obtidas por tortura?",
+        options: ["Princípio da verdade real", "Princípio da igualdade processual", "Princípio da inadmissibilidade das provas ilícitas", "Princípio da oralidade"],
+        answer: 2,
+        feedback: "\"Art. 5º, LVI da CF: São inadmissíveis, no processo, as provas obtidas por meios ilícitos.\" — PDF, p. 13"
+      },
+      {
+        q: "Qual princípio justifica a proibição da reformatio in pejus?",
+        options: ["Princípio da obrigatoriedade", "Princípio do favor rei", "Princípio da oficialidade", "Princípio da publicidade"],
+        answer: 1,
+        feedback: "\"No conflito entre o jus puniendi e o jus libertatis, deve-se decidir a favor do réu — princípio do favor rei\" — PDF, p. 15"
+      },
+      {
+        q: "O que diz o princípio da inércia da jurisdição?",
+        options: ["O juiz pode agir de ofício a qualquer momento", "O juiz só age quando provocado", "O juiz pode investigar", "O juiz é parte do processo"],
+        answer: 1,
+        feedback: "\"O juiz somente age quando provocado pelo MP ou pelo ofendido — Princípio da Inércia\" — PDF, p. 12"
+      },
+      {
+        q: "O que é o princípio da identidade física do juiz?",
+        options: ["O juiz deve estar presente na audiência", "O juiz pode ser substituído a qualquer momento", "O juiz que instruiu deve sentenciar", "O juiz deve sempre ser o mesmo durante toda a carreira"],
+        answer: 2,
+        feedback: "\"O juiz que presidiu a instrução deverá proferir a sentença\" — PDF, p. 13"
+      },
+      {
+        q: "Quando é admitida a exceção à obrigatoriedade da ação penal pública?",
+        options: ["Nunca é admitida", "Quando há representação do ofendido", "Em crimes hediondos", "Em caso de prisão preventiva"],
+        answer: 1,
+        feedback: "\"Ação penal pública condicionada à representação do ofendido é exceção à obrigatoriedade\" — PDF, p. 6"
+      },
+      {
+        q: "Qual é a natureza do inquérito policial?",
+        options: ["Processual e inquisitorial", "Administrativo e inquisitorial", "Administrativo e acusatório", "Jurisdicional e acusatório"],
+        answer: 1,
+        feedback: "\"O inquérito policial não é fase do processo, é procedimento administrativo e inquisitorial\" — PDF, p. 10"
+      }
+    ];
+
+    let current = 0;
+    let score = 0;
+    let mistakes = 0;
+
+    const questionEl = document.getElementById('question');
+    const optionsEl = document.getElementById('options');
+    const feedbackEl = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function loadQuestion() {
+      const q = quizData[current];
+      questionEl.textContent = `Pergunta ${current + 1}: ${q.q}`;
+      optionsEl.innerHTML = '';
+      feedbackEl.innerHTML = '';
+      nextBtn.style.display = 'none';
+
+      q.options.forEach((opt, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = opt;
+        btn.onclick = () => selectOption(btn, index);
+        optionsEl.appendChild(btn);
+      });
+    }
+
+    function selectOption(button, index) {
+      const q = quizData[current];
+      const buttons = optionsEl.querySelectorAll('button');
+
+      if (index === q.answer) {
+        button.classList.add('correct');
+        buttons.forEach(btn => btn.disabled = true);
+        feedbackEl.innerHTML = q.feedback;
+        score++;
+        nextBtn.style.display = 'inline-block';
+      } else {
+        button.classList.add('incorrect');
+        mistakes++;
+      }
+    }
+
+    nextBtn.onclick = () => {
+      current++;
+      if (current < quizData.length) {
+        loadQuestion();
+      } else {
+        questionEl.textContent = `🎉 Fim do Quiz! Você acertou ${score} e errou ${mistakes} questões.`;
+        optionsEl.innerHTML = '';
+        feedbackEl.innerHTML = '';
+        nextBtn.style.display = 'none';
+      }
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
